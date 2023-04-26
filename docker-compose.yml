@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  api:
+    build: ./api
+    volumes:
+    - ./api/:/api
+    - ./upload/:/upload
+    ports:
+      - 3000:3000
+  # web:
+  #   build: ./web
+  #   ports:
+  #     - 3001:3001
