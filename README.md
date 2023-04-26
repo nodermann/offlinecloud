@@ -1,1 +1,2 @@
-# Offline Cloud - is a reliable file storage solution available for personal and business use, which allows you to conveniently access your files from anywhere, whether on your computer or remote server.
+# Offline Cloud
+Is a reliable file storage solution available for personal and business use, which allows you to conveniently access your files from anywhere, whether on your computer or remote server.
