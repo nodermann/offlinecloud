@@ -8,12 +8,14 @@ async def api_ping(request):
 
 
 async def api_dir_list(request):
-    # returns a list of files
+    # returns a list of files and folders of the current directory
+    # for a file - relative path, date created, last modified, file size
+    # for a folder - relative path
     pass
 
 
 async def api_dir_download(request):
-    # download a directory from the server
+    # download a directory from the server as .zip
     pass
 
 
