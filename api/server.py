@@ -78,6 +78,8 @@ async def api_file_move(request):
 
 async def api_file_remove(request):
     # remove a file from the server
+    data = await request.json()
+    file_path = data['path']
     pass
 
 
