@@ -7,6 +7,13 @@ services:
     - ./upload/:/api/upload
     ports:
       - 3000:3000
+  api_test:
+    build: ./api_test
+    volumes:
+    - ./api_test/:/api_test
+    - ./assets/:/api_test/assets
+    depends_on:
+      - api
   # web:
   #   build: ./web
   #   ports:
