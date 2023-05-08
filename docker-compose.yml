@@ -4,7 +4,7 @@ services:
     build: ./api
     volumes:
     - ./api/:/api
-    - ./upload/:/upload
+    - ./upload/:/api/upload
     ports:
       - 3000:3000
   # web:
