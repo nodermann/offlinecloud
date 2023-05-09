@@ -10,7 +10,7 @@ import cgi
 PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dir')  
 os.chdir(PATH)
 
-FILE_SERVICE_CHUNK = 65_536  # потом убрать в .env
+FILE_SERVICE_CHUNK = 65_536
 
 
 async def api_ping(request):
@@ -32,10 +32,12 @@ async def api_dir_list(request):
                 stat = os.stat(real_fpath)
                 last_modified = datetime.fromtimestamp(os.path.getctime(real_fpath)).strftime('%Y-%m-%dT%H:%M')
                 date_created = datetime.fromtimestamp(stat.st_atime).strftime('%Y-%m-%dT%H:%M')
-                responce[fpath] = {'path': real_fpath,
-                                   'date created': date_created,
-                                   'last modified': last_modified,
-                                   'size': stat.st_size}
+                responce[fpath] = {
+                    'path': real_fpath,
+                    'date created': date_created,
+                    'last modified': last_modified,
+                    'size': stat.st_size
+                }
             else:
                 responce[fpath] = {'path': real_fpath}
         return web.json_response({'files': listdir}, status=200)
@@ -137,14 +139,9 @@ async def api_dir_new(request):
         if os.path.exists(dir_path):
             return web.json_response({'error': 'dir already exists'}, status=400)
         os.mkdir(dir_path)
-        return web.json_response(status=200)
+        return web.json_response(status=200, reason='OK')
     else:
         return web.json_response({'error': 'path not found'}, status=400)
-
-
-async def api_dir_upload(request):
-    # upload a directory with files
-    pass
 
 
 async def api_dir_copy(request):
@@ -165,7 +162,7 @@ async def api_dir_move(request):
     dst = data['dist']
     if os.path.exists(src):
         os.replace(src, dst)
-        return web.json_response(status=200)
+        return web.json_response(status=200, reason='OK')
     else:
         return web.json_response({'error': 'path not found'}, status=400)
 
@@ -179,7 +176,7 @@ async def api_dir_remove(request):
             os.rmdir(path)
         else:
             shutil.rmtree(path)
-        return web.json_response(status=200)
+        return web.json_response(status=200, reason='OK')
     else:
         return web.json_response({'error': 'path not found'}, status=400)
 
@@ -192,13 +189,13 @@ async def api_file_new(request):
     if not '.' in filename:
         filename += '.txt'
         
-    if os.path.exists(path):
-        file_path = os.path.join(os.path.dirname(path, filename))
+    if os.path.exists(file_path):
+        file_path = os.path.join(os.path.dirname(file_path, filename))
         if os.path.exists(file_path):
             return web.json_response({'error': 'file already exists'}, status=400)
         with open(file_path, 'w') as f:
             pass
-        return web.json_response(status=200)
+        return web.json_response(status=200, reason='OK')
     else:
         return web.json_response({'error': 'path not found'}, status=400)
 
@@ -210,7 +207,7 @@ async def api_file_upload(request):
     async with async_open(file_name, 'bw') as afp:
         async for data in request.content.iter_any():
             await afp.write(data)
-    return web.Response(status=201, reason='OK', text=response.inserted_primary_key[0])
+    return web.Response(status=201, reason='OK')
 
 
 async def api_file_copy(request):
@@ -233,7 +230,7 @@ async def api_file_move(request):
     dst = data['dist']
     if os.path.exists(src):
         os.replace(src, dst)
-        return web.json_response(status=200)
+        return web.json_response(status=200, reason='OK')
     else:
         return web.json_response({'error': 'path not found'}, status=400)
 
@@ -244,7 +241,7 @@ async def api_file_remove(request):
     file_path = data['path']
     if os.path.exists(file_path):
         os.remove(file_path)
-        return web.json_response(status=200)
+        return web.json_response(status=200, reason='OK')
     else:
         return web.json_response({'error': 'path not found'}, status=400)
 
