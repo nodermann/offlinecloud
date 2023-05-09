@@ -256,7 +256,6 @@ app.router.add_route('GET', '/api/file/view', api_file_view)
 app.router.add_route('GET', '/api/file/download', api_file_download)
 
 app.router.add_route('POST', '/api/dir/new', api_dir_new)
-app.router.add_route('POST', '/api/dir/upload', api_dir_upload)
 app.router.add_route('POST', '/api/dir/copy', api_dir_copy)
 app.router.add_route('POST', '/api/dir/move', api_dir_move)
 app.router.add_route('POST', '/api/dir/remove', api_dir_remove)
