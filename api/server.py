@@ -151,6 +151,7 @@ async def api_dir_copy(request):
     dst = data['dist']
     if os.path.exists(src):
         shutil.copytree(src, dst)
+        return web.json_response(status=200, reason='OK')
     else:
         return web.json_response({'error': 'path not found'}, status=400)
 
@@ -217,6 +218,7 @@ async def api_file_copy(request):
     dst = data['dist']
     if os.path.exists(src):
         shutil.copy(src, dst)
+        return web.json_response(status=200, reason='OK')
     else:
         return web.json_response({'error': 'path not found'}, status=400)
 
@@ -265,6 +267,8 @@ app.router.add_route('POST', '/api/file/upload', api_file_upload)
 app.router.add_route('POST', '/api/file/copy', api_file_copy)
 app.router.add_route('POST', '/api/file/move', api_file_move)
 app.router.add_route('POST', '/api/file/remove', api_file_remove)
+
+app.router.add_static('/files/', path=PATH, name='static')
 
 
 if __name__ == '__main__':
