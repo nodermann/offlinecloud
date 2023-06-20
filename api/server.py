@@ -5,6 +5,7 @@ from datetime import datetime
 import asyncio
 from aiofile import async_open
 import cgi
+#import ssl
 
 
 PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dir')  
@@ -27,7 +28,7 @@ async def api_dir_list(request):
         listdir = os.listdir(path)
         responce = dict()
         for fpath in listdir:
-            real_fpath = os.path.join(os.path.dirname(path, fpath))
+            real_fpath = os.path.join(os.path.dirname(path), fpath)
             if os.path.isfile(real_fpath):
                 stat = os.stat(real_fpath)
                 last_modified = datetime.fromtimestamp(os.path.getctime(real_fpath)).strftime('%Y-%m-%dT%H:%M')
@@ -135,7 +136,7 @@ async def api_dir_new(request):
     path = data['path']
     dirname = data['dirname']
     if os.path.exists(path):
-        dir_path = os.path.join(os.path.dirname(path, dirname))
+        dir_path = os.path.join(os.path.dirname(path), dirname)
         if os.path.exists(dir_path):
             return web.json_response({'error': 'dir already exists'}, status=400)
         os.mkdir(dir_path)
@@ -191,7 +192,7 @@ async def api_file_new(request):
         filename += '.txt'
         
     if os.path.exists(file_path):
-        file_path = os.path.join(os.path.dirname(file_path, filename))
+        file_path = os.path.join(os.path.dirname(file_path), filename)
         if os.path.exists(file_path):
             return web.json_response({'error': 'file already exists'}, status=400)
         with open(file_path, 'w') as f:
@@ -206,8 +207,10 @@ async def api_file_upload(request):
     _, params = cgi.parse_header(request.headers['CONTENT-DISPOSITION'])
     file_name = params['filename']
     async with async_open(file_name, 'bw') as afp:
-        async for data in request.content.iter_any():
-            await afp.write(data)
+        #async for data in request.content.iter_any():
+         #   await afp.write(data)
+        data = await request.read()
+        await afp.write(data)
     return web.Response(status=201, reason='OK')
 
 
@@ -272,4 +275,6 @@ app.router.add_static('/files/', path=PATH, name='static')
 
 
 if __name__ == '__main__':
-    web.run_app(app, host='0.0.0.0', port=3000)
+    #ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+    #ssl_context.load_cert_chain('domain_srv.crt', 'domain_srv.key')
+    web.run_app(app, host='0.0.0.0', port=3000)#, ssl_context=ssl_context)
