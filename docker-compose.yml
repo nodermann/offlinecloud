@@ -1,20 +1,18 @@
 version: "3.9"
+
 services:
   api:
     build: ./api
+    environment:
+      - OFFCLOUD_DATAROOT=/data
     volumes:
-    - ./api/:/api
-    - ./upload/:/api/upload
+    - ./data:/data
     ports:
       - 3000:3000
+
   api_test:
     build: ./api_test
-    volumes:
-    - ./api_test/:/api_test
-    - ./assets/:/api_test/assets
+    environment:
+      - OFFCLOUD_BASEURL=http://api:3000
     depends_on:
       - api
-  # web:
-  #   build: ./web
-  #   ports:
-  #     - 3001:3001

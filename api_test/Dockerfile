@@ -1,8 +1,11 @@
-FROM python:3.8
+# syntax=docker/dockerfile:1
+FROM python:3.8 as builder
 
-WORKDIR /api_test
+WORKDIR /tmp
 COPY requirements.txt .
-RUN pip3 install -r requirements.txt
-COPY . .
+RUN pip3 install -r requirements.txt && rm requirements.txt
 
-CMD [ "python", "-u", "./api_test.py"]
+FROM builder
+WORKDIR /app
+COPY . .
+CMD ["python", "-m", "pytest", "-v"]
